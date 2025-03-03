@@ -1,0 +1,114 @@
+openapi: 3.0.3
+info:
+  title: URL shortener
+  description: API for shortening long URLs and optionally specifying a custom alias or expiration date.
+  version: 1.0.0
+servers:
+  - url: localhost:8080
+    description: development server
+paths:
+  /urls:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                long_url:
+                  type: string
+                  format: uri
+                  description: The long URL to be shortened
+                  example: "https://www.example.com/some/very/long/url"
+                custom_alias:
+                  type: string
+                  description: Optional custom alias for the shortened URL.
+                  example: "optional_custom_alias"
+                expiration_date:
+                  type: string
+                  format: date
+                  description: Optional expiration date for the shortened URL (YYYY-MM-DD).
+                  example: "2023-12-31"
+              required:
+                - long_url
+      responses:
+        '200':
+          description: Successfully shortened the Url
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_url:
+                    type: string
+                    format: uri
+                    description: The shortened URL.
+                    example: "http://short.ly/abc123"
+        '400':
+          description: Bad request (e.g., invalid URL or alias already in use).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                    example: "Invalid URL provided."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                    example: "An internal server error occurred."
+  /{short_code}:
+    get:
+      summary: Redirect to the original long URL
+      description: Redirects the user to the original long URL associated with the provided short code.
+      operationId: redirectToOriginalUrl
+      parameters:
+        - name: short_code
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The short code for the shortened URL.
+          example: "abc123"
+      responses:
+        '302':
+          description: Redirect to the original long URL
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+              description: The original long URL.
+        '404':
+          description: Short code not found or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                    example: "Short code not found or expired."
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+                    example: "An internal server error occurred."
+
