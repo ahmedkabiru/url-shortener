@@ -37,5 +37,9 @@ Shorten a long URL.
 }
 ----
 
+== High-Level Architecture
 
+image::design.png[]
+
+== Data Model
 
