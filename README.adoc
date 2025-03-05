@@ -24,7 +24,6 @@ Shorten a long URL.
 ----
 {
   "long_url": "https://www.example.com/some/very/long/url",
-  "custom_alias": "optional_custom_alias",
   "expiration_date": "optional_expiration_date"
 }
 ----
@@ -36,6 +35,18 @@ Shorten a long URL.
   "short_url": "http://short.ly/abc123"
 }
 ----
+
+=== GET /{short_code}
+Shorten a long URL.
+
+==== Response
+[source,json]
+----
+{
+  "short_url": "http://short.ly/abc123"
+}
+----
+
 
 == High-Level Architecture
 
